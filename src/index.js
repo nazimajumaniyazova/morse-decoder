@@ -38,29 +38,30 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    // write your solution here
-    return expr.split('').map(elem =>{
-      if(elem === ' ') {return '**********'}
-      let tmp =''
-      let morseCode = getKeyByValue(elem);
-      for(let i =0;i<morseCode.length;i++){
-        if(morseCode[i]==='-'){
-          tmp = tmp + 11
-        }else{
-          tmp = tmp + 10
-        }
+    let res = []
+    for(let i=0;i<expr.length;){
+      let tmp = expr.substring(i, i+10)
+      let c = tmp.slice(tmp.indexOf('1'))
+      if(c === "*"){
+        res.push(' ')
+        i=i+10
+        continue;
       }
-      if(tmp.length<10){
-        while(tmp.length < 10){
-          tmp = 0 + tmp
+      let m = ''
+        for(let j=0;j<c.length;){
+          if(c.substring(j,j+2) ==='10'){
+            m=m+'.'
+          }
+          if(c.substring(j,j+2) ==='11'){
+            m=m+'-'
+          }
+          j=j+2
         }
-      }
-      return tmp
-    }).join('')
-  }
-  function getKeyByValue(value) {
-    return Object.keys(MORSE_TABLE).find(key => MORSE_TABLE[key] === value);
-  }
+      res.push(MORSE_TABLE[m])
+      i=i+10
+    }
+    return res.join('')
+}
 
 module.exports = {
     decode
